@@ -28,5 +28,5 @@ PSRC =
 ARDLIBS = 
 
 # include my base makefile
-include ../AVR-makefile-base.mk
+include AVR-makefile-base.mk
 
