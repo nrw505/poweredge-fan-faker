@@ -168,6 +168,20 @@ void setup() {
   sei();
 }
 
+// pwmInput is 0 for 0% duty cycle, linear up to 255 for 100% duty cycle
+// return a percentage duty cycle to set on the fan control output
+int calculateFanPercentage(uint8_t pwmInput) {
+  if (pwmInput == 0)
+    return 0;
+  if (pwmInput < 8)
+    return 0 + ((pwmInput - 0) * 5 / 8);
+  if (pwmInput < 192)
+    return 5 + ((pwmInput - 8) * 10 / (192 - 8));
+  if (pwmInput < 224)
+    return 15 + ((pwmInput - 192) * 15 / (224 - 192));
+  return 30 + ((pwmInput - 224) * 70 / (256 - 224));
+}
+
 void loop() {
   if (fanStartup) {
     if (secs > 0) {
@@ -179,8 +193,7 @@ void loop() {
     if (checkFanControl) {
       uint8_t avgPwm = pwmInputAccumulator / PWM_INPUT_ACCUM_SAMPLES;
 
-      int tmp = avgPwm;
-      tmp = tmp * 100 / 256;
+      int tmp = calculateFanPercentage(avgPwm);
       setFanPercentage(tmp);
       checkFanControl = 0;
     }
