@@ -6,6 +6,11 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+// Don't forget to program fuses: this code is expecting the system clock
+// to be running at 8 MHz. It was tested on a chip with:
+// lfuse=0xe2 hfuse=0xdd efuse=0xff
+
+
 // UNCONNECTED  is pin 1 / PB5 / -RESET
 // PIN_SENSE_F  is pin 2 / PB3 / PCINT3
 // PIN_PWM_F    is pin 3 / PB4 / OC1B
