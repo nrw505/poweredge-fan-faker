@@ -1,3 +1,12 @@
+### This file was taken from https://gist.github.com/entrity/5424505
+
+### While no licence was explicitly granted, the fact that this was
+### posted to gist.github.com and the author said "here, use this" on
+### stackoverflow.com I'm pretty sure the author doesn't mind it being
+### used. In any case, if you don't like the terms of the GPLv3 and
+### you still want to use this file, you probably can, even though the
+### rest of this is covered by GPLv3
+
 ### MARKHAM'S NOTES:
 
 # This Makefile includes the Arduino core sources. (Set ARDDIR here:)
