@@ -152,6 +152,9 @@ void setup() {
   // PB1 stays input (HI-Z) because it's supposed to be wired-OR
   DDRB = _BV(DDB4);
 
+  // PB3 is an input, write 1 to PORTB(3) to enable internal pull-up
+  PORTB |= PB3;
+
   // disable interrupts
   cli();
   
