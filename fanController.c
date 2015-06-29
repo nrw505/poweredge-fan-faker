@@ -10,6 +10,15 @@
 // to be running at 8 MHz. It was tested on a chip with:
 // lfuse=0xe2 hfuse=0xdd efuse=0xff
 
+FUSES = {
+  // 8MHz Internal RC Osc., Slow Startup
+  .low = (FUSE_SUT0 & FUSE_CKSEL0 & FUSE_CKSEL2 & FUSE_CKSEL3),
+  // Enable SPI Programming, Brownout detector hits at 2.7V
+  .high = (FUSE_SPIEN & FUSE_BODLEVEL1),
+  // No need for self programming
+  .extended = EFUSE_DEFAULT,
+};
+
 
 // UNCONNECTED  is pin 1 / PB5 / -RESET
 // PIN_SENSE_F  is pin 2 / PB3 / PCINT3
