@@ -148,9 +148,9 @@ void setupADC() {
 }
 
 void setup() {
-  // Set PB0, PB4 to output
+  // Set PB4 to output
   // PB1 stays input (HI-Z) because it's supposed to be wired-OR
-  DDRB = _BV(DDB0) | _BV(DDB4);
+  DDRB = _BV(DDB4);
 
   // disable interrupts
   cli();
@@ -254,8 +254,6 @@ ISR(TIMER0_COMPA_vect) {
   if (newTicks % TICKS_PER_FAN_SPEED_CHECK == 0) {
     checkFanControl = 1;
   }
-
-  PINB |= _BV(PINB0); // Toggle PB0 temporarily so we can verify the ISR is working;
 }
 
 ISR(ADC_vect) {
