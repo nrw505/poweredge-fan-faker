@@ -167,7 +167,7 @@ void setup() {
   DDRB = _BV(DDB4);
 
   // PB3 is an input, write 1 to PORTB(3) to enable internal pull-up
-  PORTB |= PB3;
+  PORTB |= _BV(PB3);
 
   // disable interrupts
   cli();
@@ -251,7 +251,10 @@ ISR(PCINT0_vect) {
   } else if (!in_pwm_c && lastPwm) {
     lastPwm = in_pwm_c;
   }
-  
+
+  // Keep PB3 high to keep the pullup on PB3's input enabled!
+  val |= _BV(PB3);
+
   PORTB = val;
 }
 
