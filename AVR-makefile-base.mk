@@ -176,6 +176,8 @@ LDFLAGS += -Wl,-Map=$(TARGET).map,--cref
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
 
+AVRDUDE_WRITE_FUSES = -U lfuse:w:lfuse.hex -U hfuse:w:hfuse.hex -U efuse:w:efuse.hex
+
 AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 
 # Uncomment the following if you want avrdude's erase cycle counter.
@@ -327,21 +329,27 @@ extcoff: $(TARGET).elf
 	@echo $(MSG_EXTENDED_COFF) $(TARGET).cof
 	$(COFFCONVERT) -O coff-ext-avr $< $(TARGET).cof
 
-
-
-
 # Program the device.  
 program: $(TARGET).hex $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) -b $(BAUDRATE) $(AVRDUDE_WRITE_EEPROM) -vv
 
+fuse:	efuse.hex lfuse.hex hfuse.hex
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FUSES) -vv
 
+efuse.hex:	$(TARGET).elf
+	$(OBJCOPY) -O $(FORMAT) -j .fuse --change-section-lma .fuse=0 -i 4 -b 2 $< $@
 
+lfuse.hex:	$(TARGET).elf
+	$(OBJCOPY) -O $(FORMAT) -j .fuse --change-section-lma .fuse=0 -i 4 -b 0 $< $@
+
+hfuse.hex:	$(TARGET).elf
+	$(OBJCOPY) -O $(FORMAT) -j .fuse --change-section-lma .fuse=0 -i 4 -b 1 $< $@
 
 # Create final output files (.hex, .eep) from ELF output file.
 %.hex: %.elf
 	@echo
 	@echo $(MSG_FLASH) $@
-	$(OBJCOPY) -O $(FORMAT) -R .eeprom $< $@
+	$(OBJCOPY) -O $(FORMAT) -R .eeprom -R .fuse $< $@
 
 %.eep: %.elf
 	@echo
@@ -408,6 +416,9 @@ clean: begin clean_list finished end
 clean_list :
 	@echo
 	@echo $(MSG_CLEANING)
+	$(REMOVE) lfuse.hex
+	$(REMOVE) hfuse.hex
+	$(REMOVE) efuse.hex
 	$(REMOVE) $(TARGET).hex
 	$(REMOVE) $(TARGET).eep
 	$(REMOVE) $(TARGET).obj
